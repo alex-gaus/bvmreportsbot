@@ -1,0 +1,1 @@
+web: gunicorn server_candidates:__hug_wsgi__
