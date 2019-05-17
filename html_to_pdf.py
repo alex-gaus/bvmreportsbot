@@ -9,6 +9,8 @@ logging.basicConfig(level=logging.INFO)
 def html_to_pdf (link, name, picture_value):
     import os
     logging.info(os.getcwd())
+    if os.getcwd() == "/home/gobitodic":
+        os.chdir("bvmreportsbot")
     logging.info("html_to_pdf started")
     exists = os.path.isfile('pdfs/%s'%(name))
     logging.info("exists is %s"%(str(exists)))
