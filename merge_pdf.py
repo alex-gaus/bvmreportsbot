@@ -4,7 +4,7 @@ logging.basicConfig(level=logging.INFO)
 def merge_pdf(mergeList,userpdflocation,userfilename):
         logging.info("merge_pdf started")
         #Sets the scripts working directory to the location of the PDFs
-        # os.chdir(userpdflocation)
+        os.chdir(userpdflocation)
         # pdf2merge = []
         # filelist_unsorted = os.listdir(".") 
         # filelist = sorted(filelist_unsorted)
@@ -21,7 +21,7 @@ def merge_pdf(mergeList,userpdflocation,userfilename):
                 for pageNum in range(pdfReader.numPages):
                         pageObj = pdfReader.getPage(pageNum)
                         pdfWriter.addPage(pageObj)
-        # os.chdir("..")
+        os.chdir("..")
         #save PDF to file, wb for write binary
         pdfOutput = open("pdfs/"+userfilename+".pdf", "wb")
         #Outputting the PDF
