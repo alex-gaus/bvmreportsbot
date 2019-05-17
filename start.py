@@ -1,10 +1,10 @@
 from bvmreportbot import main
 import os
-print(os.getcwd)
+print(os.getcwd())
 os.chdir("home")
-print(os.getcwd)
+print(os.getcwd())
 os.chdir("gobitodic")
-print(os.getcwd)
+print(os.getcwd())
 os.chdir("bvmreportsbot")
-print(os.getcwd)
+print(os.getcwd())
 main()
