@@ -7,8 +7,11 @@ import logging
 logging.basicConfig(level=logging.INFO)
 
 def html_to_pdf (link, name, picture_value):
+    import os
+    logging.info(os.getcwd())
     logging.info("html_to_pdf started")
     exists = os.path.isfile('pdfs/%s'%(name))
+    logging.info("exists is %s"%(str(exists)))
     if exists:
         logging.info("pdf exists already")
         return False
