@@ -4,7 +4,9 @@ logging.basicConfig(level=logging.INFO)
 def merge_pdf(mergeList,userpdflocation,userfilename):
         logging.info("merge_pdf started")
         #Sets the scripts working directory to the location of the PDFs
+        logging.info(os.getcwd())
         os.chdir(userpdflocation)
+        logging.info(os.getcwd())
         # pdf2merge = []
         # filelist_unsorted = os.listdir(".") 
         # filelist = sorted(filelist_unsorted)
@@ -15,6 +17,7 @@ def merge_pdf(mergeList,userpdflocation,userfilename):
         pdfWriter = PyPDF2.PdfFileWriter()
 
         for filename in mergeList:
+                logging.info(os.getcwd())
                 try:
                         pdfFileObj = open("pdfs/%s"%(filename),"rb")
                         pdfReader = PyPDF2.PdfFileReader(pdfFileObj)
