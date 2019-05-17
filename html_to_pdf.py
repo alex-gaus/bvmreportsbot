@@ -3,11 +3,14 @@ import os
 import pdfkit
 from bs4 import BeautifulSoup
 from bs4.element import Tag
+import logging
+logging.basicConfig(level=logging.INFO)
 
 def html_to_pdf (link, name, picture_value):
+    logging.info("html_to_pdf started")
     exists = os.path.isfile('pdfs/%s'%(name))
     if exists:
-        print("pdf exists already")
+        logging.info("pdf exists already")
         return False
     else:
         r = requests.get(link).text
@@ -45,6 +48,7 @@ def html_to_pdf (link, name, picture_value):
             f.write(soup.prettify())
             try:
                 pdfkit.from_file("temp.html","pdfs/%s"%(name),options)
+                logging.info("Report saved in pdfs/%s"%(name))
             except OSError:
-                print(OSError)
+                logging.error(OSError)
         return r;

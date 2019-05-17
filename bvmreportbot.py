@@ -8,6 +8,10 @@ from html_to_pdf import html_to_pdf
 from merge_pdf import merge_pdf
 from add_footer import add_footer
 from botstring import (botstring)
+import os
+import logging
+import sys
+logging.basicConfig(level=logging.INFO)
 
 users = {}
     
@@ -21,9 +25,7 @@ def createpdf (bot, update):
     
 def begin (bot, update):
     # global users
-    print(users)
     date = check_date(update.message.text[6:])
-    print(date)
     if date == False:
         update.message.reply_text(botstring["begin_error"])
     else:
@@ -33,13 +35,11 @@ def begin (bot, update):
             "begin_day" : ("0%s"%(date["day"]))[-2:]})
         update.message.reply_text(botstring["begin_correct"]%(users[update.message.chat.id]["begin_year"],users[update.message.chat.id]["begin_month"],users[update.message.chat.id]["begin_day"]))
         update.message.reply_text(botstring["begin_to_end"])
-    print(users)
     return users
 
 
 def end (bot, update):
     global users
-    print(users[update.message.chat.id])
     try:
         y= users[update.message.chat.id]["begin_year"]
     except:
@@ -60,33 +60,37 @@ def end (bot, update):
         else:
             update.message.reply_text(botstring["end_correct"]%(users[update.message.chat.id]["end_year"],users[update.message.chat.id]["end_month"],users[update.message.chat.id]["end_day"]))
             update.message.reply_text(botstring["end"]%(users[update.message.chat.id]["begin_year"],users[update.message.chat.id]["begin_month"],users[update.message.chat.id]["begin_day"],users[update.message.chat.id]["end_year"],users[update.message.chat.id]["end_month"],users[update.message.chat.id]["end_day"]))
-        print(users)
     return  users
 
 def exportpdf (bot, update):
     update.message.reply_text(botstring["exportpdf_start"])
-    print("starting getting reports") 
     reports = get_reports()
-    print(len(reports))
     start="%s%s%s"%(users[update.message.chat.id]["begin_year"],users[update.message.chat.id]["begin_month"],users[update.message.chat.id]["begin_day"])
     end="%s%s%s"%(users[update.message.chat.id]["end_year"],users[update.message.chat.id]["end_month"],users[update.message.chat.id]["end_day"])
-    print(start)
-    print(end)
     reports_sorted = sort_reports(reports,str(start),str(end))
-    update.message.reply_text(botstring["exportpdf_info"]%(len(reports_sorted)))
-    mergeList = []
-    for report in reports_sorted:
-        name = "%s.pdf"%((report["report_link"][46:-1]))
-        mergeList.append(name)
-        link = report["report_link"]
-        html_to_pdf (link,name, False)
-    print(mergeList)
-    merge_pdf(mergeList,"pdfs",str(update.message.chat.id))
-    add_footer("pdfs/%s"%(update.message.chat.id),"pdfs/%s"%(update.message.chat.id))
-    update.message.reply_text(botstring["exportpdf"])
-    # import IPython
-    # IPython.embed()
-    bot.send_document(chat_id=update.message.chat.id, timeout=180, document=open('pdfs/%s.pdf'%(str(update.message.chat.id)), 'rb'))
+    if len(reports_sorted)>0:
+        update.message.reply_text(botstring["exportpdf_info"]%(len(reports_sorted)))
+        mergeList = []
+        for report in reports_sorted:
+            name = "%s.pdf"%((report["report_link"][46:-1]))
+            mergeList.append(name)
+            link = report["report_link"]
+            html_to_pdf (link,name, False)
+        merge_pdf(mergeList,"pdfs",str(update.message.chat.id))
+        add_footer("pdfs/%s"%(update.message.chat.id),"pdfs/%s"%(update.message.chat.id))
+        update.message.reply_text(botstring["exportpdf"])
+        try:
+            bot.send_document(chat_id=update.message.chat.id, timeout=360, document=open('pdfs/%s.pdf'%(str(update.message.chat.id)), 'rb'))
+            if os.path.exists('pdfs/%s.pdf'%(str(update.message.chat.id))):
+                os.remove('pdfs/%s.pdf'%(str(update.message.chat.id)))
+            else:
+                logging.info("The file pdfs/%s.pdf does not exist"%(str(update.message.chat.id))) 
+        except:
+            logging.info("Sending of document not possible")
+    else:
+        logging.info("For timeframe no reports")
+        update.message.reply_text(botstring["exportpdf_no_reports"])
+
 
 def statistics(bot,update):
     reports = get_reports()
@@ -109,7 +113,7 @@ def main():
     # Create Updater object and attach dispatcher to it
     updater = Updater(telegram_bot_token)
     dispatcher = updater.dispatcher
-    print("Bot started")
+    logging.info("Bot started")
 
     # Add command handler to dispatcher
     start_handler = CommandHandler('start',start)

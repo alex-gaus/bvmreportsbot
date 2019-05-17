@@ -49,6 +49,9 @@ Please press or type /exportpdf""",
 """I found %d reports in the timeframe you selected.""",
 "exportpdf":
 """ ✅ Export is done 😌""",
+"exportpdf_no_reports":
+"""For the selected timeframe there are not respors. Please try another timeframe.
+/createpdf""",
 "undefined":
 """What are you trying to tell me? I don't understand 🙉
 Do you need /help?""",

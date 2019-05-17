@@ -1,5 +1,8 @@
 import os, PyPDF2
+import logging
+logging.basicConfig(level=logging.INFO)
 def merge_pdf(mergeList,userpdflocation,userfilename):
+        logging.info("merge_pdf started")
         #Sets the scripts working directory to the location of the PDFs
         os.chdir(userpdflocation)
         # pdf2merge = []
@@ -25,4 +28,5 @@ def merge_pdf(mergeList,userpdflocation,userfilename):
         pdfWriter.write(pdfOutput)
         #Closing the PDF writer
         pdfOutput.close()
+        logging.info("merged pdf saved as pdfs/%s.pdf"%(userfilename))
         return 1

@@ -4,8 +4,11 @@ import json
 import requests
 from operator import itemgetter  
 from credentials import botid
+import logging
+logging.basicConfig(level=logging.INFO)
 
 def get_reports():
+    logging.info("get_reports started")
     cookies = {
     }
     headers = {
@@ -34,6 +37,7 @@ def get_reports():
     return json
 
 def sort_reports(reports, start, end):
+    logging.info("sort_reports started")
     for report in reports:
         reports=sorted(reports,key=itemgetter("date"))
         date= int(report["date"].replace("-","")[:8])

@@ -5,8 +5,11 @@ from pdfrw.buildxobj import pagexobj
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.lib.colors import HexColor
+import logging
+logging.basicConfig(level=logging.INFO)
 
 def add_footer(input_file,output_file):
+    logging.info("add_footer started")
     # Get pages
     reader = PdfReader("%s.pdf"%(input_file))
     pages = [pagexobj(p) for p in reader.pages]
@@ -38,4 +41,5 @@ def add_footer(input_file,output_file):
         canvas.showPage()
 
     canvas.save()
+    logging.info("PDF with footer %s.pdf was saved"%(output_file))
     return 1
