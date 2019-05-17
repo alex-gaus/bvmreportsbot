@@ -1,4 +1,4 @@
 from bvmreportbot import main
 import os
-os.chdir("bvmreportsbot")
+os.chdir("home/gobitodic/bvmreportsbot")
 main()
