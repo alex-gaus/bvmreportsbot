@@ -15,12 +15,15 @@ def merge_pdf(mergeList,userpdflocation,userfilename):
         pdfWriter = PyPDF2.PdfFileWriter()
 
         for filename in mergeList:
-                pdfFileObj = open("pdfs/%s"%(filename),"rb")
-                pdfReader = PyPDF2.PdfFileReader(pdfFileObj)
-        #Opening each page of the PDF
-                for pageNum in range(pdfReader.numPages):
-                        pageObj = pdfReader.getPage(pageNum)
-                        pdfWriter.addPage(pageObj)
+                try:
+                        pdfFileObj = open("pdfs/%s"%(filename),"rb")
+                        pdfReader = PyPDF2.PdfFileReader(pdfFileObj)
+                #Opening each page of the PDF
+                        for pageNum in range(pdfReader.numPages):
+                                pageObj = pdfReader.getPage(pageNum)
+                                pdfWriter.addPage(pageObj)
+                except:
+                        logging.info("The pdf %s was not found."%(filename))
         os.chdir("..")
         #save PDF to file, wb for write binary
         pdfOutput = open("pdfs/"+userfilename+".pdf", "wb")
