@@ -81,6 +81,7 @@ def exportpdf (bot, update):
         update.message.reply_text(botstring["exportpdf"])
         try:
             bot.send_document(chat_id=update.message.chat.id, timeout=360, document=open('pdfs/%s.pdf'%(str(update.message.chat.id)), 'rb'))
+            logging.info("The file pdfs/%s.pdf was sent"%(str(update.message.chat.id))) 
             if os.path.exists('pdfs/%s.pdf'%(str(update.message.chat.id))):
                 os.remove('pdfs/%s.pdf'%(str(update.message.chat.id)))
             else:
