@@ -19,7 +19,7 @@ def merge_pdf(mergeList,userpdflocation,userfilename):
         for filename in mergeList:
                 logging.info(os.getcwd())
                 try:
-                        pdfFileObj = open("pdfs/%s"%(filename),"rb")
+                        pdfFileObj = open("%s"%(filename),"rb")
                         pdfReader = PyPDF2.PdfFileReader(pdfFileObj)
                 #Opening each page of the PDF
                         for pageNum in range(pdfReader.numPages):
