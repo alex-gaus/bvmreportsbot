@@ -16,7 +16,7 @@ def add_footer(input_file,output_file):
     canvas = Canvas("%s.pdf"%(output_file))
     pdfmetrics.registerFont(TTFont('SourceSansPro', 'SourceSansPro-Regular.ttf'))
 
-    for page_num, page in enumerate(pages, start=2):
+    for page_num, page in enumerate(pages, start=1):
 
         # Add page
         canvas.setPageSize((page.BBox[2], page.BBox[3]))
