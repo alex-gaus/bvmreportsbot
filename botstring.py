@@ -6,6 +6,7 @@ botstring = {
 I am quite new, I don't have many functions and not everything is working.
 To get some statistics 📊 about our reports, please press or type /statistics
 To export the reports as a pdf 📄, please press or type /createpdf
+To export the reports as a csv 🗒, please press or type /createcsv
 If you need any help ⁉️, please press or type /help""",
     "createpdf":
     """I will export the reports for a certain timeframe in a pdf 📄 for you.
