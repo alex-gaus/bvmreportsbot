@@ -4,6 +4,7 @@ import json
 import requests
 from operator import itemgetter  
 from credentials import botid
+import pandas
 import logging
 logging.basicConfig(level=logging.INFO)
 
@@ -38,9 +39,20 @@ def get_reports():
 
 def sort_reports(reports, start, end):
     logging.info("sort_reports started")
+    print("test")
+    print(len(reports))
     for report in reports:
         reports=sorted(reports,key=itemgetter("date"))
         date= int(report["date"].replace("-","")[:8])
+        print(date)
         if date < int(start) or date > int(end):
             reports.remove(report)
+            print("removed")
+        if report["status"] != "publish":
+            reports.remove(report)
+    print(len(reports))           
     return (reports)
+
+def json_to_csv(json, name):
+    df = pandas.DataFrame(json)
+    df.to_csv("%s.csv"%(name), index=True, sep=",")

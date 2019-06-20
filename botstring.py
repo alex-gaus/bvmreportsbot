@@ -13,6 +13,12 @@ To do so I will need the begin date of the timeframe.
 Please give me the begin date in the following format:
 '/begin YYYY-MM-DD'
 Example: '/begin 2019-10-31'""",
+    "createcsv":
+    """I will export the reports for a certain timeframe in a csv 📊 for you.
+To do so I will need the begin date of the timeframe.
+Please give me the begin date in the following format:
+'/begin YYYY-MM-DD'
+Example: '/begin 2019-10-31'""",
     "begin_error":
     """❌❌❌ The date you gave me was not correct. Please give in the correct format for the begin date:
 '/begin YYYY-MM-DD'
@@ -42,7 +48,7 @@ Please change '/start YYYY-MM-DD' or '/end YYYY-MM-DD'""",
     """Do you want me to export the reports 📄 for you?
 📅 The start date is: %s/%s/%s
 📅 End date: %s/%s/%s
-Please press or type /exportpdf""",
+Please press or type /export%s""",
 "exportpdf_start":
 """The exporting started. This can take some minutes. Go & have a ☕️""",
 "exportpdf_info":
@@ -52,6 +58,15 @@ Please press or type /exportpdf""",
 "exportpdf_no_reports":
 """For the selected timeframe there are not respors. Please try another timeframe.
 /createpdf""",
+"exportcsv_start":
+"""The exporting started. This can take some minutes. Go & have a ☕️""",
+"exportcsv_info":
+"""I found %d reports in the timeframe you selected.""",
+"exportcsv":
+""" ✅ Export is done 😌""",
+"exportcsv_no_reports":
+"""For the selected timeframe there are not respors. Please try another timeframe.
+/createcsv""",
 "undefined":
 """What are you trying to tell me? I don't understand 🙉
 Do you need /help?""",

@@ -3,7 +3,7 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from credentials import telegram_bot_token
 from check_date import (check_date, check_date_logic)
-from reports import (get_reports,sort_reports)
+from reports import (get_reports,sort_reports,json_to_csv)
 from html_to_pdf import html_to_pdf
 from merge_pdf import merge_pdf
 from add_footer import add_footer
@@ -21,10 +21,18 @@ def start(bot, update):
     
 def createpdf (bot, update):
     update.message.reply_text(botstring["createpdf"])
-    users[update.message.chat.id] = {}
+    users[update.message.chat.id] = {"type":"pdf"}
+
+def createcsv (bot, update):
+    update.message.reply_text(botstring["createcsv"])
+    users[update.message.chat.id] = {"type":"csv"}
+
     
 def begin (bot, update):
-    # global users
+    try:
+        users[update.message.chat.id]
+    except KeyError:
+        undefined(bot,update)
     date = check_date(update.message.text[6:])
     if date == False:
         update.message.reply_text(botstring["begin_error"])
@@ -39,7 +47,10 @@ def begin (bot, update):
 
 
 def end (bot, update):
-    global users
+    try:
+        users[update.message.chat.id]
+    except KeyError:
+        undefined(bot,update)
     try:
         y= users[update.message.chat.id]["begin_year"]
     except:
@@ -59,10 +70,15 @@ def end (bot, update):
             return
         else:
             update.message.reply_text(botstring["end_correct"]%(users[update.message.chat.id]["end_year"],users[update.message.chat.id]["end_month"],users[update.message.chat.id]["end_day"]))
-            update.message.reply_text(botstring["end"]%(users[update.message.chat.id]["begin_year"],users[update.message.chat.id]["begin_month"],users[update.message.chat.id]["begin_day"],users[update.message.chat.id]["end_year"],users[update.message.chat.id]["end_month"],users[update.message.chat.id]["end_day"]))
+            update.message.reply_text(botstring["end"]%(users[update.message.chat.id]["begin_year"],users[update.message.chat.id]["begin_month"],users[update.message.chat.id]["begin_day"],users[update.message.chat.id]["end_year"],users[update.message.chat.id]["end_month"],users[update.message.chat.id]["end_day"],users[update.message.chat.id]["type"]))
     return  users
 
 def exportpdf (bot, update):
+    try:
+        users[update.message.chat.id]
+    except KeyError:
+        undefined(bot,update)
+    print(users[update.message.chat.id])
     update.message.reply_text(botstring["exportpdf_start"])
     reports = get_reports()
     start="%s%s%s"%(users[update.message.chat.id]["begin_year"],users[update.message.chat.id]["begin_month"],users[update.message.chat.id]["begin_day"])
@@ -92,6 +108,30 @@ def exportpdf (bot, update):
         logging.info("For timeframe no reports")
         update.message.reply_text(botstring["exportpdf_no_reports"])
 
+def exportcsv (bot, update):
+    try:
+        users[update.message.chat.id]
+    except KeyError:
+        undefined(bot,update)
+    update.message.reply_text(botstring["exportcsv_start"])
+    reports = get_reports()
+    start="%s%s%s"%(users[update.message.chat.id]["begin_year"],users[update.message.chat.id]["begin_month"],users[update.message.chat.id]["begin_day"])
+    end="%s%s%s"%(users[update.message.chat.id]["end_year"],users[update.message.chat.id]["end_month"],users[update.message.chat.id]["end_day"])
+    reports_sorted = sort_reports(reports,str(start),str(end))
+    if len(reports_sorted)>0:
+        update.message.reply_text(botstring["exportcsv_info"]%(len(reports_sorted)))
+        json_to_csv(reports_sorted,str(update.message.chat.id))
+        update.message.reply_text(botstring["exportcsv"])
+        try:
+            bot.send_document(chat_id=update.message.chat.id, timeout=360, document=open('%s.csv'%(str(update.message.chat.id)), 'rb'))
+            logging.info("The file %s.csv was sent"%(str(update.message.chat.id))) 
+            os.remove('%s.csv'%(str(update.message.chat.id)))
+        except:
+            logging.info("Sending of document not possible")
+    else:
+        logging.info("For timeframe no reports")
+        update.message.reply_text(botstring["exportcsv_no_reports"])
+
 
 def statistics(bot,update):
     reports = get_reports()
@@ -119,18 +159,22 @@ def main():
     # Add command handler to dispatcher
     start_handler = CommandHandler('start',start)
     pdf_handler = CommandHandler('createpdf',createpdf)
+    csv_handler = CommandHandler('createcsv',createcsv)
     begin_handler = CommandHandler('begin',begin)
     end_handler = CommandHandler('end',end)
-    export_handler = CommandHandler ('exportpdf', exportpdf)
+    exportpdf_handler = CommandHandler ('exportpdf', exportpdf)
+    exportcsv_handler = CommandHandler ('exportcsv', exportcsv)
     help_handler = CommandHandler('help', help)
     statistics_handler = CommandHandler('statistics', statistics)
     upper_case = MessageHandler(Filters.text, undefined)
     dispatcher.add_handler(start_handler)
     dispatcher.add_handler(upper_case)
     dispatcher.add_handler(pdf_handler)
+    dispatcher.add_handler(csv_handler)
     dispatcher.add_handler(begin_handler)
     dispatcher.add_handler(end_handler)
-    dispatcher.add_handler(export_handler)
+    dispatcher.add_handler(exportpdf_handler)
+    dispatcher.add_handler(exportcsv_handler)
     dispatcher.add_handler(help_handler)
     dispatcher.add_handler(statistics_handler)
 
