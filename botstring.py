@@ -76,6 +76,7 @@ Do you need /help?""",
 Sorry if not everything is working perfect. I am quite new and I don't have many functions yet.
 To get some statistics 📊 about our reports, please press or type /statistics
 To export the reports as a pdf 📄, please press or type /createpdf
+To export the reports as a csv 🗒, please press or type /createcsv
 If you want to give feedback or talk to my CREATOR 🧟‍, write a message to t.me/gobi_todic""",
 "statistics":
 """ 📊 So far I can only tell you the amount of reports in our database:
