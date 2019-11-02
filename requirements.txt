@@ -1,7 +1,7 @@
 pdfkit==0.6.1
 beautifulsoup4==4.5.3
 PyPDF2==1.26.0
-requests==2.13.0
+requests==2.20.0
 reportlab==3.5.13
 pdfrw==0.4
 python-telegram-bot==7.0.1      
